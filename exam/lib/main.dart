@@ -1,3 +1,4 @@
+import 'package:exam/pages/account/account_edit_page.dart';
 import 'package:exam/pages/app/app.dart';
 import 'package:exam/pages/auth/phone_validate_page.dart';
 import 'package:exam/pages/grocery/grocery_page.dart';
@@ -20,7 +21,9 @@ class App extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: GroceryPage(),
+      home: AccountEdit(
+        
+      ),
     );
   }
 
