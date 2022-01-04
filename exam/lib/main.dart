@@ -1,6 +1,7 @@
 import 'package:exam/pages/app/app.dart';
 import 'package:exam/pages/auth/phone_validate_page.dart';
-import 'package:exam/pages/recipe/recipe_page.dart';
+import 'package:exam/pages/recipe/recipe_detail/edit_recipe.dart';
+import 'package:exam/pages/recipe/recipe_screen/recipe_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: const RecipePage(),
+      home: EditRecipe(),
     );
   }
 
