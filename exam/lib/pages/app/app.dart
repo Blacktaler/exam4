@@ -1,5 +1,6 @@
 import 'package:exam/core/configs/size_config.dart';
 import 'package:exam/pages/home/home_page.dart';
+import 'package:exam/pages/recipe/recipe_page.dart';
 import 'package:exam/pages/search/search_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    pages = [HomePage(), SearchPage(), Container(), Container(), Container()];
+    pages = [HomePage(), SearchPage(), RecipePage(), Container(), Container()];
     super.initState();
   }
 

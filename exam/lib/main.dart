@@ -1,5 +1,6 @@
 import 'package:exam/pages/app/app.dart';
 import 'package:exam/pages/auth/phone_validate_page.dart';
+import 'package:exam/pages/grocery/grocery_page.dart';
 import 'package:exam/pages/recipe/recipe_detail/edit_recipe.dart';
 import 'package:exam/pages/recipe/recipe_page.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: EditRecipe(),
+      home: GroceryPage(),
     );
   }
 
