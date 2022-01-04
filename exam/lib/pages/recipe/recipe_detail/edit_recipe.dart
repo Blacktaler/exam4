@@ -1,4 +1,7 @@
 import 'package:exam/core/configs/size_config.dart';
+import 'package:exam/pages/recipe/recipe_detail/ingredients.dart';
+import 'package:exam/pages/recipe/recipe_detail/intro_part.dart';
+import 'package:exam/pages/recipe/recipe_detail/steps.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,29 +11,20 @@ class EditRecipe extends StatefulWidget {
 }
 
 class _EditRecipeState extends State<EditRecipe> {
-  int _buttonIndex = 0;
-
-  String dropDownV = "easy";
-
-  List<String>? dropDownItems;
   List? forms;
 
-  bool? _switchValue;
+  int _buttonIndex = 0;
+
   @override
   void initState() {
-    dropDownItems = [
-      "easy",
-      "medium",
-      "difficult",
-    ];
-    _switchValue= false;
+    forms = [Intro(), Ingredients(), Steps()];
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
-    forms = [intro()];
     return Scaffold(
       appBar: appBar(),
       body: SingleChildScrollView(
@@ -46,7 +40,7 @@ class _EditRecipeState extends State<EditRecipe> {
                 ],
               ),
             ),
-            forms![0],
+            forms![_buttonIndex],
           ],
         ),
       ),
@@ -59,7 +53,13 @@ class _EditRecipeState extends State<EditRecipe> {
       backgroundColor: Colors.transparent,
       toolbarHeight: getHeight(60),
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return _dialog();
+              });
+        },
         icon: const Icon(
           Icons.arrow_back_ios,
           color: Colors.black,
@@ -121,132 +121,57 @@ class _EditRecipeState extends State<EditRecipe> {
     );
   }
 
-  Widget intro() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: getWidth(16), vertical: getHeight(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                labelText: "Title",
-                labelStyle: TextStyle(fontSize: getFont(14))),
-          ),
-          SizedBox(
-            height: getHeight(28),
-          ),
-          Text(
-            "Cook Time",
-            style: TextStyle(fontSize: getFont(14), color: Colors.grey),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    labelText: "hours",
-                    labelStyle:
-                        TextStyle(fontSize: getFont(14), color: Colors.grey),
-                  ),
-                ),
+  Widget _dialog() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      contentPadding: EdgeInsets.all(getWidth(24)),
+      content: SizedBox(
+        height: getHeight(125),
+        child: Column(
+          children: [
+            Text(
+              "Are you sure you want to go back?",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: getFont(20),
               ),
-              SizedBox(
-                width: getWidth(15),
-              ),
-              Expanded(
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    labelText: "minutes",
-                    labelStyle:
-                        TextStyle(fontSize: getFont(14), color: Colors.grey),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: getHeight(54)),
-          TextFormField(
-            minLines: 1,
-            maxLines: 20,
-            decoration: InputDecoration(
-              suffix: Icon(Icons.edit),
             ),
-          ),
-          SizedBox(height: getHeight(24)),
-          Text(
-            "Description",
-            style: TextStyle(fontSize: getFont(14), color: Colors.grey),
-          ),
-          Text(
-            "Membuat hidangan dengan bahan sayuran bisa jadi pilihan Sahabat Mallika. Sup makaroni dengan sayuran juga sangat cocok menu hidangan makan malam hari ini. Berikut bahan dan cara membuat sup makaroni. ",
-            style: TextStyle(
-              fontSize: getFont(14),
+            SizedBox(
+              height: getHeight(5),
             ),
-          ),
-          SizedBox(height: getHeight(24)),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: getHeight(14),),
-                    Text(
-                      "difficulty",
-                      style:
-                          TextStyle(color: Colors.grey, fontSize: getFont(14)),
-                    ),
-                    DropdownButton(
-                      value: dropDownV,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: dropDownItems!.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropDownV = newValue!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+            Text(
+              "Any changes you made will be lost",
+              style: TextStyle(
+                fontSize: getFont(16),
               ),
-              Expanded(
-                  child: TextFormField(
-                initialValue: '2 people',
-                decoration: InputDecoration(
-                  labelText: "Serve",
-                ),
-              ))
-            ],
-          ),
-          SizedBox(height: getHeight(24)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("publish to Community",style: TextStyle(
-                color: Colors.grey,
-                fontSize: getFont(14)
-              ),),
-              CupertinoSwitch(value: _switchValue!, onChanged: (d){
-                setState(() {
-                  
-                });
-              }),
-            ],
-          )
-        ],
+            ),
+          ],
+        ),
       ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Cancel",
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: getFont(20),
+              ),
+            )),
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Ok",
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: getFont(20),
+              ),
+            )),
+      ],
     );
   }
 }
