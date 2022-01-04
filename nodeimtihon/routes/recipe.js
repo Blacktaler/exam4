@@ -4,7 +4,9 @@ var router = express.Router();
 var Recipe = require('../schemas/recipe/recipe_schema');
 var Instruction = require('../schemas/recipe/instruction_schema');
 var Intro = require('../schemas/recipe/intro_schema');
+var LastSeen = require('../schemas/lastseen/lastseen_schema');
 
+// get all recipes
 router.get('/', async function (req, res, next) {
   try {
     var recipes = await Recipe.find().populate({
@@ -20,9 +22,27 @@ router.get('/', async function (req, res, next) {
   }
 });
 
-router.get('/:recipeId', async function (req, res, next) {
+
+router.get('/:recipeId&:userId', async function (req, res, next) {
   const recipeId = req.params.recipeId;
+  const userId = req.params.userId;
+
+  
   try {
+    const lastseen = await LastSeen.find({
+      "recipe_id": recipeId,
+      "user_id": userId,
+    });
+    
+    console.log(lastseen)
+
+    if (lastseen.length == 0) {
+      await LastSeen.create({
+        recipe_id: recipeId,
+        user_id: userId,
+      });
+    }
+
     var recipes = await Recipe.findById(recipeId).populate({
       path: 'instruction', populate: {
         path: 'intro'
@@ -34,7 +54,9 @@ router.get('/:recipeId', async function (req, res, next) {
     console.log(error);
     res.status(500).json({ success: false, msg: error.message });
   }
+
 });
+
 
 router.post('/create/:userid', async function (req, res, next) {
   const id = req.params.userid;
@@ -61,6 +83,8 @@ router.post('/create/:userid', async function (req, res, next) {
 
     var recipe = await Recipe.create({
       UID: id,
+      username: req.body.username,
+      user_photo: req.body.user_photo,
       like: req.body.like,
     });
 
@@ -112,9 +136,9 @@ router.put("/edit/:recipeid", async function (req, res, next) {
 
   const introId = instruction.intro[0];
 
- Intro.findByIdAndUpdate(introId, { "title": req.body.title }, function (err, result) {
+  Intro.findByIdAndUpdate(introId, { "title": req.body.title }, function (err, result) {
     if (err) {
-      res.send({"ok": false, "message": err})
+      res.send({ "ok": false, "message": err })
     }
     else {
       res.send({

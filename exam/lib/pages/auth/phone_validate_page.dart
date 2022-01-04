@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:exam/core/configs/size_config.dart';
 import 'package:exam/pages/auth/sign_up_page.dart';
+import 'package:exam/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -14,51 +16,6 @@ class _AuthPageState extends State<AuthPage> {
   bool _isLoading = false;
   String _phoneNumber = '';
   Dio dio = Dio();
-
-  checkValidate() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      var response = await Dio().post(
-        'http://10.0.2.2:3000/users/checkvalidate',
-        data: {
-          "phone": int.parse(_phoneNumber),
-        },
-      );
-
-      if (response.data["isExists"]) {
-        var response = await Dio().post(
-          'http://10.0.2.2:3000/users/signin',
-          data: {
-            "phone": int.parse(_phoneNumber),
-          },
-        );
-
-        print(response.data);
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SignUpPage(
-              phoneNumber: _phoneNumber,
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -302,5 +259,57 @@ class _AuthPageState extends State<AuthPage> {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  isLogged()async{
+   SharedPreferences shared = await SharedPreferences.getInstance();
+
+   shared.getBool("isLogged");
+   shared.setBool("isLogged", true);
+  }
+
+  void checkValidate() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var response = await Dio().post(
+        'http://10.0.2.2:3000/users/checkvalidate',
+        data: {
+          "phone": int.parse(_phoneNumber),
+        },
+      );
+
+      if (response.data["isExists"]) {
+        var response = await Dio().post(
+          'http://10.0.2.2:3000/users/signin',
+          data: {
+            "phone": int.parse(_phoneNumber),
+          },
+        );
+        isLogged();
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>HomePage()));
+        print(response.data);
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpPage(
+              phoneNumber: _phoneNumber,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

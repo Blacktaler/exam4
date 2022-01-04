@@ -15,35 +15,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String _userName = '';
   Dio dio = Dio();
 
-  checkValidate() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      var response = await Dio().post(
-        'http://10.0.2.2:3000/users/signup',
-        data: {
-          "name": _userName,
-          "phone": int.parse(widget.phoneNumber),
-        },
-      );
-
-      print(response.data);
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
@@ -275,7 +246,6 @@ class _SignUpPageState extends State<SignUpPage> {
       width: cSize.width,
       height: getHeight(40),
       margin: EdgeInsets.symmetric(horizontal: 8),
-      // padding: EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         "By continuing, you agree to our\nTerms of service * Privacy Policy * Content Policy",
         style: TextStyle(
@@ -286,5 +256,34 @@ class _SignUpPageState extends State<SignUpPage> {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  void checkValidate() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      var response = await Dio().post(
+        'http://10.0.2.2:3000/users/signup',
+        data: {
+          "name": _userName,
+          "phone": int.parse(widget.phoneNumber),
+        },
+      );
+      
+      print(response.data);
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

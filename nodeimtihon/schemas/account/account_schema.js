@@ -5,8 +5,9 @@ var Schema = mongoose.Schema;
 
 var AccountSchema = new Schema({
     name: {type: String,required:true },
-    email: {type: String,required: false},
     phone: {type: Number,required: true},
+    user_photo: {type: String,required: true},
+    email: {type: String,required: false},
     bio: {type: String,required: false}    
 });
 

@@ -6,11 +6,15 @@ var Account = require('../schemas/account/account_schema');
 router.post('/signup', async function (req, res, next) {
     console.log(req.body.name);
     console.log(req.body.phone);
-    
+
+    let phLast = req.body.phone.toString();
+    let rand = phLast[phLast.length - 1] + req.body.name.length;
+
     var account = await Account.create({
         name: req.body.name,
-        email: "",
         phone: req.body.phone,
+        user_photo: `https://source.unsplash.com/random/${rand}`,
+        email: "",
         bio: ""
     });
 
@@ -38,7 +42,7 @@ router.post('/checkvalidate', async function (req, res, next) {
                 if (err) return handleError(err);
             }
         });
-        
+
         if (account) {
             res.send({
                 "ok": true,
