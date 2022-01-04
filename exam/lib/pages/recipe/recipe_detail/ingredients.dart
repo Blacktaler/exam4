@@ -78,7 +78,7 @@ class Ingredients extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontSize: getFont(16),
-                ),
+                )
               )
             ],
           ),
